@@ -11,9 +11,39 @@
     transition: all 0.3s ease;
     border: 2px solid;
 }
-svg {
+
+.icon-box {
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-right: 1rem;
-} 
+    margin-right: 0.5rem;
+    width: 2rem;
+    height: 2rem;
+}
+
+/* FontAwesome or SVG icons */
+.fa, .fas, .responsive-icon {
+    font-size: 1.5em;
+}
+
+/*
+** Styles on mobile & tablet
+*/
+@media (max-width: 569px) {
+
+    .donation-button {
+        border-radius: 100%;
+        padding: 1rem; 
+    }
+
+    .donation-button-text {
+        display: none;
+    }
+
+    .icon-box {
+        margin-right: 0;
+        width: 100%;
+        height: 100%;
+    }
+
+}

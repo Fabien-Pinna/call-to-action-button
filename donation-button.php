@@ -52,6 +52,7 @@ function donation_button_settings()
     register_setting('donation_button_settings', 'label_color', 'sanitize_text_field');
     register_setting('donation_button_settings', 'button_color', 'sanitize_text_field');
     register_setting('donation_button_settings', 'button_querySelector', 'sanitize_text_field');
+    register_setting('donation_button_settings', 'button_icon', 'sanitize_text_field');
 
     add_settings_section('button_settings_section', __('Button Settings', 'donation-button'), 'button_settings_section_callback', 'donation_button');
 
@@ -60,6 +61,7 @@ function donation_button_settings()
     add_settings_field('label_color', __('Label Color', 'donation-button'), 'label_color_callback', 'donation_button', 'button_settings_section');
     add_settings_field('button_color', __('Button Color', 'donation-button'), 'button_color_callback', 'donation_button', 'button_settings_section');
     add_settings_field('button_querySelector', __('Button querySelector', 'donation-button'), 'button_querySelector_callback', 'donation_button', 'button_settings_section');
+    add_settings_field('button_icon', __('Button Icon', 'donation-button'), 'button_icon_callback', 'donation_button', 'button_settings_section');
 }
 
 function button_settings_section_callback()
@@ -101,6 +103,12 @@ function button_querySelector_callback()
     ";
 }
 
+function button_icon_callback()
+{
+    $button_icon = get_option('button_icon', 'fas fa-gift');
+    echo "<input type='text' name='button_icon' value='" . esc_attr($button_icon) . "' />";
+}
+
 // Enqueue Scripts and Styles
 function donation_button_scripts()
 {
@@ -113,7 +121,15 @@ function donation_button_scripts()
         'labelColor'  => get_option('label_color', '#000000'),
         'buttonColor' => get_option('button_color', '#000000'),
         'buttonQuerySelector' => get_option('button_querySelector', ''),
+        'buttonIcon' => get_option('button_icon', 'fas fa-gift')
     ];
     wp_localize_script('donation-button', 'localizedObject', $button_data);
 }
 add_action('wp_enqueue_scripts', 'donation_button_scripts');
+
+// Enqueue FontAwesome
+function enqueue_donation_button_icon_font()
+{
+    wp_enqueue_style('font-awesome', 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css', [], '5.15.3');
+}
+add_action('wp_enqueue_scripts', 'enqueue_donation_button_icon_font');
