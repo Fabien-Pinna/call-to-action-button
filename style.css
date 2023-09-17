@@ -21,10 +21,12 @@
     height: 2rem;
 }
 
-/* FontAwesome or SVG icons */
-.fa-heart {
+
+
+i.fas {
     font-size: 1.5em;
 }
+
 
 /*
 ** Styles on mobile & tablet

@@ -105,14 +105,18 @@ function button_querySelector_callback()
 
 function button_icon_callback()
 {
-    $button_icon = get_option('button_icon', 'fa-gift');
-    echo "<input type='text' name='button_icon' value='" . esc_attr($button_icon) . "' />";
+    $button_icon = get_option('button_icon', 'fas fa-gift');
+    echo "
+        <div id='icon-picker'></div>
+        <input type='hidden' id='button_icon' name='button_icon' value='" . esc_attr($button_icon) . "' />
+    ";
 }
 
 // Enqueue Scripts and Styles
 function donation_button_scripts()
 {
-    wp_enqueue_script('donation-button', plugin_dir_url(__FILE__) . 'admin.js', [], '1.0.1', true);
+    wp_enqueue_script('donation-button', plugin_dir_url(__FILE__) . 'donation-button.js', [], '1.0.1', true);
+    wp_enqueue_script('font-awesome', 'https://kit.fontawesome.com/19c0b9443b.js', []);
     wp_enqueue_style('donation-button', plugin_dir_url(__FILE__) . 'style.css');
 
     $button_data = [
@@ -121,15 +125,17 @@ function donation_button_scripts()
         'labelColor'  => get_option('label_color', '#000000'),
         'buttonColor' => get_option('button_color', '#000000'),
         'buttonQuerySelector' => get_option('button_querySelector', ''),
-        'buttonIcon' => get_option('button_icon', 'fa-gift')
+        'buttonIcon' => get_option('button_icon', 'fas fa-gift')
     ];
     wp_localize_script('donation-button', 'localizedObject', $button_data);
 }
 add_action('wp_enqueue_scripts', 'donation_button_scripts');
 
 // Enqueue FontAwesome
-function enqueue_donation_button_icon_font()
+function enqueue_donation_button_admin_scripts()
 {
     wp_enqueue_script('font-awesome', 'https://kit.fontawesome.com/19c0b9443b.js', []);
+    wp_enqueue_script('donation-button-admin', plugin_dir_url(__FILE__) . 'admin-picker.js', [], '1.0.1', true);
+    wp_enqueue_style('donation-button-admin-style', plugin_dir_url(__FILE__) . 'admin-style.css');
 }
-add_action('wp_enqueue_scripts', 'enqueue_donation_button_icon_font');
+add_action('admin_enqueue_scripts', 'enqueue_donation_button_admin_scripts');

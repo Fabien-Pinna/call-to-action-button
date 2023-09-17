@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
         labelColor = '#000000',
         buttonColor = '#000000',
         buttonQuerySelector = '',
-        buttonIcon = 'fa-regular fa-heart'
+        buttonIcon = 'fas fa-heart'
     } = localizedObject;
 
     const button = document.createElement('a');
@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
     iconBox.setAttribute('class', 'icon-box');
 
     const faIcon = document.createElement('i');
-    faIcon.className = buttonIcon;
+    faIcon.className = buttonIcon.replace('selected', '');
     faIcon.style.color = labelColor;
     iconBox.appendChild(faIcon);
 
