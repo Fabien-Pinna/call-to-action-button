@@ -105,7 +105,7 @@ function button_querySelector_callback()
 
 function button_icon_callback()
 {
-    $button_icon = get_option('button_icon', 'fas fa-gift');
+    $button_icon = get_option('button_icon', 'fa-gift');
     echo "<input type='text' name='button_icon' value='" . esc_attr($button_icon) . "' />";
 }
 
@@ -121,7 +121,7 @@ function donation_button_scripts()
         'labelColor'  => get_option('label_color', '#000000'),
         'buttonColor' => get_option('button_color', '#000000'),
         'buttonQuerySelector' => get_option('button_querySelector', ''),
-        'buttonIcon' => get_option('button_icon', 'fas fa-gift')
+        'buttonIcon' => get_option('button_icon', 'fa-gift')
     ];
     wp_localize_script('donation-button', 'localizedObject', $button_data);
 }
@@ -130,6 +130,6 @@ add_action('wp_enqueue_scripts', 'donation_button_scripts');
 // Enqueue FontAwesome
 function enqueue_donation_button_icon_font()
 {
-    wp_enqueue_style('font-awesome', 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css', [], '5.15.3');
+    wp_enqueue_script('font-awesome', 'https://kit.fontawesome.com/19c0b9443b.js', []);
 }
 add_action('wp_enqueue_scripts', 'enqueue_donation_button_icon_font');

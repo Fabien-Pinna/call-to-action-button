@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
         labelColor = '#000000',
         buttonColor = '#000000',
         buttonQuerySelector = '',
-        buttonIcon = 'fas fa-heart'
+        buttonIcon = 'fa-regular fa-heart'
     } = localizedObject;
 
     const button = document.createElement('a');
