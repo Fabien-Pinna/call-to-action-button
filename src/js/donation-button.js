@@ -1,3 +1,5 @@
+import '../scss/donation-button.scss'
+
 document.addEventListener('DOMContentLoaded', (event) => {
     const {
         buttonLabel = 'Click Me',

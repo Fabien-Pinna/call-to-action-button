@@ -115,9 +115,9 @@ function button_icon_callback()
 // Enqueue Scripts and Styles
 function donation_button_scripts()
 {
-    wp_enqueue_script('donation-button', plugin_dir_url(__FILE__) . 'donation-button.js', [], '1.0.1', true);
+    wp_enqueue_script('donation-button', plugin_dir_url(__FILE__) . 'dist/donation-button.bundle.js', [], '1.0.1', true);
     wp_enqueue_script('font-awesome', 'https://kit.fontawesome.com/19c0b9443b.js', []);
-    wp_enqueue_style('donation-button', plugin_dir_url(__FILE__) . 'style.css');
+    wp_enqueue_style('donation-button', plugin_dir_url(__FILE__) . 'dist/donation-button.css');
 
     $button_data = [
         'buttonLabel' => get_option('button_label', 'Click Me'),
@@ -135,7 +135,7 @@ add_action('wp_enqueue_scripts', 'donation_button_scripts');
 function enqueue_donation_button_admin_scripts()
 {
     wp_enqueue_script('font-awesome', 'https://kit.fontawesome.com/19c0b9443b.js', []);
-    wp_enqueue_script('donation-button-admin', plugin_dir_url(__FILE__) . 'admin-picker.js', [], '1.0.1', true);
-    wp_enqueue_style('donation-button-admin-style', plugin_dir_url(__FILE__) . 'admin-style.css');
+    wp_enqueue_script('donation-button-admin', plugin_dir_url(__FILE__) . 'dist/admin-picker.bundle.js', [], '1.0.1', true);
+    wp_enqueue_style('donation-button-admin-style', plugin_dir_url(__FILE__) . 'dist/admin-picker.css');
 }
 add_action('admin_enqueue_scripts', 'enqueue_donation_button_admin_scripts');
