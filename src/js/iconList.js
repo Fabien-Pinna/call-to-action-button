@@ -477,7 +477,6 @@ export const iconList = [
     { icon: 'fa fa-angellist' },
     { icon: 'fa fa-cc' },
     { icon: 'fa fa-ils' },
-    { icon: 'fa fa-meanpath' },
     { icon: 'fa fa-buysellads' },
     { icon: 'fa fa-connectdevelop' },
     { icon: 'fa fa-dashcube' },

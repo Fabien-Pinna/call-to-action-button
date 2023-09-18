@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
         }
 
         iconBox.appendChild(iconElement);
-        iconBox.appendChild(iconName);
+        // iconBox.appendChild(iconName);
         iconPicker.appendChild(iconBox);
     });
 });
