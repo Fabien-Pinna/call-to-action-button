@@ -48,20 +48,24 @@ add_action('admin_init', 'donation_button_settings');
 function donation_button_settings()
 {
     register_setting('donation_button_settings', 'button_label', 'sanitize_text_field');
-    register_setting('donation_button_settings', 'button_link_target', 'sanitize_url_field');
     register_setting('donation_button_settings', 'label_color', 'sanitize_text_field');
     register_setting('donation_button_settings', 'button_color', 'sanitize_text_field');
-    register_setting('donation_button_settings', 'button_querySelector', 'sanitize_text_field');
+    register_setting('donation_button_settings', 'label_font_size', 'sanitize_text_field');
+    register_setting('donation_button_settings', 'icon_size', 'sanitize_text_field');
+    register_setting('donation_button_settings', 'button_link_target', 'sanitize_url_field');
     register_setting('donation_button_settings', 'button_icon', 'sanitize_text_field');
+    register_setting('donation_button_settings', 'button_querySelector', 'sanitize_text_field');
 
     add_settings_section('button_settings_section', __('Button Settings', 'donation-button'), 'button_settings_section_callback', 'donation_button');
 
     add_settings_field('button_label', __('Button Label', 'donation-button'), 'button_label_callback', 'donation_button', 'button_settings_section');
-    add_settings_field('button_link_target', __('Button Link Target', 'donation-button'), 'button_link_target_callback', 'donation_button', 'button_settings_section');
     add_settings_field('label_color', __('Label Color', 'donation-button'), 'label_color_callback', 'donation_button', 'button_settings_section');
     add_settings_field('button_color', __('Button Color', 'donation-button'), 'button_color_callback', 'donation_button', 'button_settings_section');
-    add_settings_field('button_querySelector', __('Button querySelector', 'donation-button'), 'button_querySelector_callback', 'donation_button', 'button_settings_section');
+    add_settings_field('label_font_size', __('Label Font Size', 'donation-button'), 'label_font_size_callback', 'donation_button', 'button_settings_section');
+    add_settings_field('icon_size', __('Icon Size', 'donation-button'), 'icon_size_callback', 'donation_button', 'button_settings_section');
+    add_settings_field('button_link_target', __('Button Link Target', 'donation-button'), 'button_link_target_callback', 'donation_button', 'button_settings_section');
     add_settings_field('button_icon', __('Button Icon', 'donation-button'), 'button_icon_callback', 'donation_button', 'button_settings_section');
+    add_settings_field('button_querySelector', __('Button querySelector', 'donation-button'), 'button_querySelector_callback', 'donation_button', 'button_settings_section');
 }
 
 function button_settings_section_callback()
@@ -73,12 +77,6 @@ function button_label_callback()
 {
     $button_label = get_option('button_label', 'Click Me');
     echo "<input type='text' name='button_label' value='" . esc_attr($button_label) . "' />";
-}
-
-function button_link_target_callback()
-{
-    $button_link_target = get_option('button_link_target', 'https://example.com');
-    echo "<input type='url' name='button_link_target' value='" . esc_attr($button_link_target) . "' />";
 }
 
 function label_color_callback()
@@ -93,6 +91,36 @@ function button_color_callback()
     echo "<input type='color' name='button_color' value='" . esc_attr($button_color) . "' />";
 }
 
+function label_font_size_callback()
+{
+    $label_font_size = get_option('label_font_size', '1em');
+    echo "<input type='text' name='label_font_size' value='" . esc_attr($label_font_size) . "' />";
+}
+
+function icon_size_callback()
+{
+    $icon_size = get_option('icon_size', '1em');
+    echo "<input type='text' name='icon_size' value='" . esc_attr($icon_size) . "' />";
+}
+
+
+function button_link_target_callback()
+{
+    $button_link_target = get_option('button_link_target', 'https://example.com');
+    echo "<input type='url' name='button_link_target' value='" . esc_attr($button_link_target) . "' />";
+}
+
+
+
+function button_icon_callback()
+{
+    $button_icon = get_option('button_icon', 'fas fa-gift');
+    echo "
+    <div id='icon-picker'></div>
+    <input type='hidden' id='button_icon' name='button_icon' value='" . esc_attr($button_icon) . "' />
+    ";
+}
+
 function button_querySelector_callback()
 {
     $button_querySelector = get_option('button_querySelector', 'Add your querySelector');
@@ -100,15 +128,6 @@ function button_querySelector_callback()
         <input type='text' name='button_querySelector' value='" . esc_attr($button_querySelector) . "' />
         <p class='description'>Enter the class or id for the HTML element where you want the button to appear.</p>
         <p><strong>Example:</strong> #wp-container</p>
-    ";
-}
-
-function button_icon_callback()
-{
-    $button_icon = get_option('button_icon', 'fas fa-gift');
-    echo "
-        <div id='icon-picker'></div>
-        <input type='hidden' id='button_icon' name='button_icon' value='" . esc_attr($button_icon) . "' />
     ";
 }
 
@@ -121,11 +140,13 @@ function donation_button_scripts()
 
     $button_data = [
         'buttonLabel' => get_option('button_label', 'Click Me'),
-        'buttonLinkTarget' => get_option('button_link_target', 'https://example.com'),
         'labelColor'  => get_option('label_color', '#000000'),
         'buttonColor' => get_option('button_color', '#000000'),
-        'buttonQuerySelector' => get_option('button_querySelector', ''),
-        'buttonIcon' => get_option('button_icon', 'fas fa-gift')
+        'labelFontSize' => get_option('label_font_size', '1em'),
+        'iconSize' => get_option('icon_size', '1em'),
+        'buttonLinkTarget' => get_option('button_link_target', 'https://example.com'),
+        'buttonIcon' => get_option('button_icon', 'fas fa-gift'),
+        'buttonQuerySelector' => get_option('button_querySelector', '')
     ];
     wp_localize_script('donation-button', 'localizedObject', $button_data);
 }

@@ -3,9 +3,11 @@ import '../scss/donation-button.scss'
 document.addEventListener('DOMContentLoaded', (event) => {
     const {
         buttonLabel = 'Click Me',
-        buttonLinkTarget = '#',
         labelColor = '#000000',
         buttonColor = '#000000',
+        labelFontSize = '1em',
+        iconSize = '1em',
+        buttonLinkTarget = '#',
         buttonQuerySelector = '',
         buttonIcon = 'fas fa-heart'
     } = localizedObject;
@@ -23,15 +25,23 @@ document.addEventListener('DOMContentLoaded', (event) => {
     });
 
     const buttonText = document.createElement('span');
-    buttonText.setAttribute('class', 'donation-button-text');
+    setAttributes(buttonText, {
+        class: 'donation-button-text',
+        style: `font-size: ${labelFontSize};`
+    })
     buttonText.appendChild(document.createTextNode(buttonLabel.toUpperCase()));
+
 
     const iconBox = document.createElement('div');
     iconBox.setAttribute('class', 'icon-box');
 
     const faIcon = document.createElement('i');
-    faIcon.className = buttonIcon.replace('selected', '');
-    faIcon.style.color = labelColor;
+    setAttributes(faIcon, {
+        class: buttonIcon.replace('selected', ''),
+        style: `
+        color: ${labelColor};
+        font-size: ${iconSize};`
+    });
     iconBox.appendChild(faIcon);
 
     button.onmouseover = function () {
