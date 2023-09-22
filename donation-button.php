@@ -52,7 +52,7 @@ function donation_button_settings()
     register_setting('donation_button_settings', 'button_color', 'sanitize_text_field');
     register_setting('donation_button_settings', 'label_font_size', 'sanitize_text_field');
     register_setting('donation_button_settings', 'icon_size', 'sanitize_text_field');
-    register_setting('donation_button_settings', 'button_link_target', 'sanitize_url_field');
+    register_setting('donation_button_settings', 'button_link_target', 'sanitize_text_field');
     register_setting('donation_button_settings', 'button_icon', 'sanitize_text_field');
     register_setting('donation_button_settings', 'button_querySelector', 'sanitize_text_field');
 
@@ -131,11 +131,86 @@ function button_querySelector_callback()
     ";
 }
 
+add_action('init', function () {
+    error_log("HOOK INSTANCIATED!!!");
+});
+
+add_action('rest_api_init', function () {
+    error_log("Hook rest_api_init OKKKK");
+    register_rest_route('myplugin/v1', '/icons/', array(
+        'methods' => WP_REST_Server::READABLE,
+        'callback' => 'get_icons',
+    ));
+});
+
+function get_icons()
+{
+    $icons = [];
+    $directory_path = WP_CONTENT_DIR . '/uploads/simple-iconfonts/';
+
+    foreach (glob($directory_path . '*', GLOB_ONLYDIR) as $folder) {
+        $json_path = $folder . '/metadata.json';
+
+        if (file_exists($json_path)) {
+            $content = json_decode(file_get_contents($json_path), true);
+            if (isset($content['icons'])) {
+                $icons = array_merge($icons, $content['icons']);
+            }
+        }
+    }
+
+    return new WP_REST_Response($icons, 200);
+}
+
+function check_file_update()
+{
+    $directory_path = WP_CONTENT_DIR . '/uploads/simple-iconfonts/';
+    $icons = []; // Initialize an array to hold the new icons
+
+    // Loop through each icon font directory
+    foreach (glob($directory_path . '*', GLOB_ONLYDIR) as $folder) {
+        $json_path = $folder . '/metadata.json';
+        $css_path = $folder . '/style.css';
+
+        // Check metadata.json file
+        if (file_exists($json_path)) {
+            $current_hash_json = md5_file($json_path);
+            $option_name_json = 'metadata_json_hash_' . basename($folder);
+            $saved_hash_json = get_option($option_name_json, '');
+
+            if ($current_hash_json !== $saved_hash_json) {
+                update_option($option_name_json, $current_hash_json);
+
+                $content = json_decode(file_get_contents($json_path), true);
+                if (isset($content['icons'])) {
+                    $icons = array_merge($icons, $content['icons']);
+                }
+            }
+        }
+
+        // Check style.css file
+        if (file_exists($css_path)) {
+            $current_hash_css = md5_file($css_path);
+            $option_name_css = 'style_css_hash_' . basename($folder);
+            $saved_hash_css = get_option($option_name_css, '');
+
+            if ($current_hash_css !== $saved_hash_css) {
+                update_option($option_name_css, $current_hash_css);
+                // Assuming that the style.css would have similar meta info for icons
+            }
+        }
+    }
+
+    // Update the icons list in the database
+    update_option('donation_button_icons', $icons);
+}
+add_action('admin_init', 'check_file_update');
+
+
 // Enqueue Scripts and Styles
 function donation_button_scripts()
 {
     wp_enqueue_script('donation-button', plugin_dir_url(__FILE__) . 'dist/donation-button.bundle.js', [], '1.0.1', true);
-    wp_enqueue_script('font-awesome', 'https://kit.fontawesome.com/19c0b9443b.js', []);
     wp_enqueue_style('donation-button', plugin_dir_url(__FILE__) . 'dist/donation-button.css');
 
     $button_data = [
@@ -152,11 +227,27 @@ function donation_button_scripts()
 }
 add_action('wp_enqueue_scripts', 'donation_button_scripts');
 
-// Enqueue FontAwesome
+// Enqueue scripts and styles for admin
 function enqueue_donation_button_admin_scripts()
 {
-    wp_enqueue_script('font-awesome', 'https://kit.fontawesome.com/19c0b9443b.js', []);
-    wp_enqueue_script('donation-button-admin', plugin_dir_url(__FILE__) . 'dist/admin-picker.bundle.js', [], '1.0.1', true);
-    wp_enqueue_style('donation-button-admin-style', plugin_dir_url(__FILE__) . 'dist/admin-picker.css');
+    $current_screen = get_current_screen();
+    if ('toplevel_page_donation_button' === $current_screen->id) {
+        wp_enqueue_script('donation-button-admin', plugin_dir_url(__FILE__) . 'dist/admin-picker.bundle.js', [], '1.0.1', true);
+        wp_enqueue_style('donation-button-admin-style', plugin_dir_url(__FILE__) . 'dist/admin-picker.css');
+
+        // Get styles from check_file_update
+        $directory_path = WP_CONTENT_DIR . '/uploads/simple-iconfonts/';
+
+        foreach (glob($directory_path . '*', GLOB_ONLYDIR) as $folder) {
+            $css_path = $folder . '/style.css';
+
+            if (file_exists($css_path)) {
+                // Generate a unique style id
+                $style_id = 'style-' . basename($folder);
+
+                wp_enqueue_style($style_id, content_url('/uploads/simple-iconfonts/' . basename($folder) . '/style.css'));
+            }
+        }
+    }
 }
 add_action('admin_enqueue_scripts', 'enqueue_donation_button_admin_scripts');

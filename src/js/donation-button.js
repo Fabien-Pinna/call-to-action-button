@@ -33,11 +33,11 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
 
     const iconBox = document.createElement('div');
-    iconBox.setAttribute('class', 'icon-box');
+    iconBox.setAttribute('class', 'box-icon');
 
     const faIcon = document.createElement('i');
     setAttributes(faIcon, {
-        class: buttonIcon.replace('selected', ''),
+        class: `button-icon ${buttonIcon.replace('selected', '')}`,
         style: `
         color: ${labelColor};
         font-size: ${iconSize};`
