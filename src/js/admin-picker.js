@@ -18,8 +18,8 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
                 // Add icons to the icon picker
                 data.forEach((iconObj) => {
-                    const iconBox = document.createElement('div');
-                    const iconElement = document.createElement('i');
+                    const iconBox = document.createElement('div')
+                    const iconElement = document.createElement('i')
 
                     iconBox.className = 'box-icon';
                     iconElement.className = iconObj.id;

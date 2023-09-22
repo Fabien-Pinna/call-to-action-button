@@ -3,6 +3,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 module.exports = {
     entry: {
+        'custom-codemirror': './src/js/custom-codemirror.js',
         'admin-picker': './src/js/admin-picker.js',
         'donation-button': './src/js/donation-button.js',
     },

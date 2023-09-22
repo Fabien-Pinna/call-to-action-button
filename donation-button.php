@@ -55,6 +55,7 @@ function donation_button_settings()
     register_setting('donation_button_settings', 'button_link_target', 'sanitize_text_field');
     register_setting('donation_button_settings', 'button_icon', 'sanitize_text_field');
     register_setting('donation_button_settings', 'button_querySelector', 'sanitize_text_field');
+    register_setting('donation_button_settings', 'custom_css', 'sanitize_textarea_field');
 
     add_settings_section('button_settings_section', __('Button Settings', 'donation-button'), 'button_settings_section_callback', 'donation_button');
 
@@ -66,6 +67,7 @@ function donation_button_settings()
     add_settings_field('button_link_target', __('Button Link Target', 'donation-button'), 'button_link_target_callback', 'donation_button', 'button_settings_section');
     add_settings_field('button_icon', __('Button Icon', 'donation-button'), 'button_icon_callback', 'donation_button', 'button_settings_section');
     add_settings_field('button_querySelector', __('Button querySelector', 'donation-button'), 'button_querySelector_callback', 'donation_button', 'button_settings_section');
+    add_settings_field('custom_css', __('Custom CSS', 'donation-button'), 'custom_css_callback', 'donation_button', 'button_settings_section');
 }
 
 function button_settings_section_callback()
@@ -110,8 +112,6 @@ function button_link_target_callback()
     echo "<input type='url' name='button_link_target' value='" . esc_attr($button_link_target) . "' />";
 }
 
-
-
 function button_icon_callback()
 {
     $button_icon = get_option('button_icon', 'fas fa-gift');
@@ -125,11 +125,20 @@ function button_querySelector_callback()
 {
     $button_querySelector = get_option('button_querySelector', 'Add your querySelector');
     echo "
-        <input type='text' name='button_querySelector' value='" . esc_attr($button_querySelector) . "' />
-        <p class='description'>Enter the class or id for the HTML element where you want the button to appear.</p>
-        <p><strong>Example:</strong> #wp-container</p>
+    <input type='text' name='button_querySelector' value='" . esc_attr($button_querySelector) . "' />
+    <p class='description'>Enter the class or id for the HTML element where you want the button to appear.</p>
+    <p><strong>Example:</strong> #wp-container</p>
     ";
 }
+function custom_css_callback()
+{
+    $custom_css = get_option('custom_css', '');
+    echo "
+    <textarea id='custom-css' name='custom_css'>" . esc_textarea($custom_css) . "</textarea>
+    <p class='description'>Enter your custom css here.</p>
+    ";
+}
+
 
 add_action('init', function () {
     error_log("HOOK INSTANCIATED!!!");
@@ -206,6 +215,14 @@ function check_file_update()
 }
 add_action('admin_init', 'check_file_update');
 
+function add_inline_custom_css()
+{
+    $custom_css = get_option('custom_css', '');
+    if (!empty($custom_css)) {
+        echo '<style type="text/css">' . esc_html($custom_css) . '</style>';
+    }
+}
+add_action('wp_head', 'add_inline_custom_css');
 
 // Enqueue Scripts and Styles
 function donation_button_scripts()
@@ -251,3 +268,25 @@ function enqueue_donation_button_admin_scripts()
     }
 }
 add_action('admin_enqueue_scripts', 'enqueue_donation_button_admin_scripts');
+
+
+// Enqueue CodeMirror scripts and styles
+function enqueue_codemirror_assets()
+{
+    $current_screen = get_current_screen();
+    if ('toplevel_page_donation_button' === $current_screen->id) {
+        $editor_settings = wp_enqueue_code_editor(array('type' => 'text/css'));
+
+        if (false !== $editor_settings) {
+            wp_enqueue_script('wp-code-editor');
+            wp_add_inline_script('wp-code-editor', sprintf('var editorSettings = %s;', wp_json_encode($editor_settings)));
+
+            wp_enqueue_style('wp-code-editor');
+
+            wp_enqueue_script('custom-codemirror', plugin_dir_url(__FILE__) . 'dist/custom-codemirror.bundle.js', [], null, true);
+            wp_enqueue_style('custom-codemirror-style', plugin_dir_url(__FILE__) . 'dist/custom-codemirror.css');
+        }
+    }
+}
+
+add_action('admin_enqueue_scripts', 'enqueue_codemirror_assets');
