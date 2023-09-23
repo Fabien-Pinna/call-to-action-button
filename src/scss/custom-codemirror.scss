@@ -1,34 +1,71 @@
+
 .CodeMirror {
+/* variables */
+--color-bg: #1d1d1d;
+--border-active-line: 1px solid #4c1dba;
+--color-red-fire: #dc2a95;
+--color-blue-ice: #0fefff;
+--color-green-flash: #19f405;
+
   border: 1px solid #ddd;
   font-family: monospace;
-  background: #f1dbdb;
+  background: var(--color-bg);
   width: 90%;
   max-width: 800px;
+
+  &-gutters {
+    background: var(--color-bg);
+    border-right: 1px solid #ddd;
+  }
+
+  &-linenumber {
+    color: #8251c3 !important;
+  }
+
+  span {
+    color: rgb(238, 175, 228);
+  }
+
   
   &-cursor {
-    border-left: 1px solid #333;
+    color: white;
+    border-left: 1.5px solid white;
   }
+
+  &-activeline-background {
+    background: var(--color-bg);
+    border-top: var(--border-active-line);
+    border-bottom: var(--border-active-line);
+  }
+
+  &-matchingbracket {
+    color: #f6f204 !important;
+    background: var(--color-bg) !important;
+  }
+  
   /* Syntax highlighting styles */
-  .cm-keyword {color: #708;}
-  .cm-atom {color: #219;}
-  .cm-number {color: #164;}
+  .cm-error {
+    border-bottom: 1px solid #ff0000;
+  }
+  .cm-tag {color: var(--color-red-fire);}
+  .cm-keyword {color: var(--color-red-fire);}
+  .cm-property {color: var(--color-blue-ice);}
+  .cm-atom {color: var(--color-blue-ice);}
+  .cm-qualifier {color: var(--color-green-flash);}
+  .cm-builtin {color: var(--color-green-flash);}
+  .cm-number {color: rgb(185, 6, 250);}
   .cm-def {color: #00f;}
-  .cm-variable {color: black;}
-  .cm-variable-2 {color: #05a;}
+  .cm-variable {color: var(--color-blue-ice);}
+  .cm-variable-2 {color: #fcfdfd;}
   .cm-comment {color: #a50;}
   .cm-string {color: #a11;}
   .cm-string-2 {color: #f50;}
   .cm-meta {color: #555;}
-  .cm-builtin {color: #30a;}
-  .cm-bracket {color: #997;}
-  .cm-tag {color: #170;}
   .cm-attribute {color: #00c;}
   .cm-header {color: blue;}
   .cm-quote {color: #090;}
   .cm-hr {color: #999;}
   .cm-link {color: #00c;}
   .hljs-attribute {color: #00a67d;}
-  .cm-qualifier {color: #df3079;}
 }
-
 
