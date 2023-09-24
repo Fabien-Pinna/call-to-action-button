@@ -2,7 +2,7 @@ import '../scss/admin-picker.scss';
 
 document.addEventListener('DOMContentLoaded', (event) => {
     function updateIconList() {
-        fetch(window.location.origin + '/webinfab-sandbox/index.php/wp-json/myplugin/v1/icons/')
+        fetch(window.location.origin + '/index.php/wp-json/myplugin/v1/icons/')
             .then(async response => {
                 if (response.ok) {
                     return response.json();
